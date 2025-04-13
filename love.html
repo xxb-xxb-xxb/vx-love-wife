@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>给老婆的浪漫惊喜</title>
+  <title>To小雅宝宝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
@@ -109,31 +109,53 @@
     }
 
     .heart:after {
-      left: -5px;
       top: 0;
+      left: -5px;
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(0) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(45deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
     }
 
-    audio {
-      display: none;
+    .arrow {
+      position: fixed;
+      width: 60px;
+      height: 20px;
+      background: transparent;
+      z-index: 4;
+      pointer-events: none;
+      transform: rotate(0deg);
     }
+
+    .arrow::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 100%;
+      height: 6px;
+      background: pink;
+      border-radius: 3px;
+    }
+
+    .arrow::after {
+      content: '\2665'; /* heart */
+      font-size: 18px;
+      position: absolute;
+      right: -10px;
+      top: 0;
+      color: red;
+    }
+
+    audio { display: none; }
   </style>
 </head>
 <body>
 
 <canvas id="fireworks"></canvas>
-<div class="heart-center"></div>
-<div class="typing">永远爱全世界最可爱的宝宝！笨蛋老婆蔡雅婷💕</div>
+<div class="heart-center" id="heart"></div>
+<div class="typing">永远爱全世界最可爱的笨蛋老婆蔡雅婷💕</div>
 <audio autoplay loop>
   <source src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_d924fb74c5.mp3" type="audio/mpeg">
 </audio>
@@ -149,11 +171,11 @@
     setTimeout(() => heart.remove(), 6000);
   }, 200);
 
-  // 烟花
+  // 烟花特效
   const canvas = document.getElementById("fireworks");
   const ctx = canvas.getContext("2d");
-  let w = (canvas.width = window.innerWidth);
-  let h = (canvas.height = window.innerHeight);
+  let w = canvas.width = window.innerWidth;
+  let h = canvas.height = window.innerHeight;
 
   window.addEventListener("resize", () => {
     w = canvas.width = window.innerWidth;
@@ -166,7 +188,6 @@
     this.x = x;
     this.y = y;
     this.particles = [];
-
     for (let i = 0; i < 80; i++) {
       this.particles.push({
         x: x,
@@ -200,6 +221,7 @@
 
   canvas.addEventListener("click", e => {
     fireworks.push(new Firework(e.clientX, e.clientY));
+    shootArrow(e.clientX, e.clientY);
   });
 
   function animate() {
@@ -215,6 +237,20 @@
   }
 
   animate();
+
+  // 丘比特箭动画
+  function shootArrow(toX, toY) {
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
+    document.body.appendChild(arrow);
+    arrow.style.left = "-80px";
+    arrow.style.top = toY + "px";
+    arrow.style.transition = "all 1s ease-out";
+    requestAnimationFrame(() => {
+      arrow.style.left = toX + "px";
+    });
+    setTimeout(() => arrow.remove(), 1500);
+  }
 </script>
 
 </body>
