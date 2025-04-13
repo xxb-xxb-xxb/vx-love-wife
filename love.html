@@ -1,52 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>VX 爱笨蛋老婆蔡雅婷</title>
+  <meta charset="UTF-8" />
+  <title>给老婆的浪漫惊喜</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: linear-gradient(120deg, #ffe4ec, #fff5fa);
-      font-family: "Segoe UI", sans-serif;
+      background: radial-gradient(circle at center, #fff0f5, #ffe6f0);
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
     }
 
-    .center-box {
-      position: absolute;
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .heart-center {
+      position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
+      width: 120px;
+      height: 120px;
+      background: red;
+      transform: translate(-50%, -50%) rotate(45deg);
+      animation: beat 1s infinite;
+      z-index: 2;
     }
 
-    #startBtn {
-      padding: 15px 30px;
+    .heart-center:before,
+    .heart-center:after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart-center:before {
+      top: -60px;
+      left: 0;
+    }
+
+    .heart-center:after {
+      left: -60px;
+      top: 0;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(45deg); }
+      50% { transform: translate(-50%, -50%) scale(1.1) rotate(45deg); }
+    }
+
+    .typing {
+      position: fixed;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 24px;
-      background-color: #ff69b4;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-      transition: background-color 0.3s ease;
-    }
-
-    #startBtn:hover {
-      background-color: #ff1493;
-    }
-
-    #message {
-      font-size: 28px;
       color: #d81b60;
-      margin-top: 30px;
       white-space: nowrap;
       overflow: hidden;
       border-right: .1em solid #d81b60;
       width: 0;
-      animation: typing 4s steps(40, end) forwards, blink .7s infinite;
-      display: none;
+      animation: typing 6s steps(40, end) forwards, blink 0.7s infinite;
+      z-index: 3;
     }
 
     @keyframes typing {
@@ -59,41 +84,42 @@
     }
 
     .heart {
-      width: 15px;
-      height: 15px;
+      width: 10px;
+      height: 10px;
+      position: fixed;
       background: red;
-      position: absolute;
       transform: rotate(45deg);
-      animation: fall 3s linear infinite;
+      animation: fall 5s linear infinite;
+      z-index: 0;
     }
 
     .heart:before,
     .heart:after {
-      content: "";
-      width: 15px;
-      height: 15px;
-      background: red;
+      content: '';
       position: absolute;
+      width: 10px;
+      height: 10px;
+      background: red;
       border-radius: 50%;
     }
 
     .heart:before {
-      top: -7.5px;
+      top: -5px;
       left: 0;
     }
 
     .heart:after {
+      left: -5px;
       top: 0;
-      left: -7.5px;
     }
 
     @keyframes fall {
       0% {
-        transform: translateY(-10vh) rotate(45deg);
+        transform: translateY(0) rotate(45deg);
         opacity: 1;
       }
       100% {
-        transform: translateY(110vh) rotate(45deg);
+        transform: translateY(100vh) rotate(45deg);
         opacity: 0;
       }
     }
@@ -105,35 +131,90 @@
 </head>
 <body>
 
-<div class="center-box">
-  <button id="startBtn">点我一下嘛～</button>
-  <div id="message">VX 永远爱笨蛋老婆蔡雅婷！你是我全世界最可爱的宝贝 💕</div>
-</div>
-
-<audio id="bgMusic" autoplay loop>
+<canvas id="fireworks"></canvas>
+<div class="heart-center"></div>
+<div class="typing">永远爱笨蛋老婆蔡雅婷！你是我全世界最可爱的宝贝 💕</div>
+<audio autoplay loop>
   <source src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_d924fb74c5.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  const btn = document.getElementById('startBtn');
-  const msg = document.getElementById('message');
-  const music = document.getElementById('bgMusic');
+  // 爱心雨
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }, 200);
 
-  btn.addEventListener('click', () => {
-    btn.style.display = 'none';
-    msg.style.display = 'inline-block';
-    music.play();
+  // 烟花
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+  let w = (canvas.width = window.innerWidth);
+  let h = (canvas.height = window.innerHeight);
 
-    // 生成爱心雨
-    setInterval(() => {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
-    }, 150);
+  window.addEventListener("resize", () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
   });
+
+  const fireworks = [];
+
+  function Firework(x, y) {
+    this.x = x;
+    this.y = y;
+    this.particles = [];
+
+    for (let i = 0; i < 80; i++) {
+      this.particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6,
+        alpha: 1,
+        radius: Math.random() * 2 + 1,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
+    }
+  }
+
+  Firework.prototype.update = function () {
+    this.particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= 0.01;
+    });
+  };
+
+  Firework.prototype.draw = function () {
+    this.particles.forEach(p => {
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    });
+  };
+
+  canvas.addEventListener("click", e => {
+    fireworks.push(new Firework(e.clientX, e.clientY));
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    fireworks.forEach((fw, i) => {
+      fw.update();
+      fw.draw();
+      if (fw.particles.every(p => p.alpha <= 0)) {
+        fireworks.splice(i, 1);
+      }
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 </script>
 
 </body>
